@@ -37,12 +37,15 @@ type FooReconciler struct {
 	Scheme *runtime.Scheme
 }
 
+// RBAC permissions to monitor foo custom resources
 //+kubebuilder:rbac:groups=foo.entgigi.entando.org,resources=foos,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=foo.entgigi.entando.org,resources=foos/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=foo.entgigi.entando.org,resources=foos/finalizers,verbs=update
+// RBAC permissions to monitor pods
+//+kubebuilder:rbac:groups="",resources=pods,verbs=get;list;watch
 //
-// For more details, check Reconcile and its Result here:
-// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
+// Reconcile is part of the main kubernetes reconciliation loop which aims to
+// move the current state of the cluster closer to the desired state.
 func (r *FooReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	log.Info("reconciling Foo custom resource")
@@ -94,7 +97,7 @@ func (r *FooReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-// recupera le CRD di eventuali pod creati modificati o cancellati
+// recupera le CR Foo di eventuali pod creati modificati o cancellati
 func (r *FooReconciler) mapPodsReqToFooReq(obj client.Object) []reconcile.Request {
 	ctx := context.Background()
 	log := log.FromContext(ctx)
