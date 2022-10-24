@@ -39,6 +39,8 @@ import (
 	//+kubebuilder:scaffold:imports
 )
 
+const WatchNamespaceEnvVar = "WATCH_NAMESPACE"
+
 var (
 	scheme   = runtime.NewScheme()
 	setupLog = ctrl.Log.WithName("setup")
@@ -74,8 +76,17 @@ func main() {
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
-	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
+	printVersion()
+
+	namespace, err := getWatchNamespace()
+	if err != nil {
+		setupLog.Error(err, "Failed to get watch namespace, defaulting to all namespace mode")
+	}
+	setupLog.Info(fmt.Sprintf("Watching namespace \"%s\"", namespace))
+
+	options := ctrl.Options{
 		Scheme:                 scheme,
+		Namespace:              namespace,
 		MetricsBindAddress:     metricsAddr,
 		Port:                   9443,
 		HealthProbeBindAddress: probeAddr,
@@ -92,7 +103,9 @@ func main() {
 		// if you are doing or is intended to do any operation such as perform cleanups
 		// after the manager stops then its usage might be unsafe.
 		// LeaderElectionReleaseOnCancel: true,
-	})
+	}
+
+	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), options)
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
 		os.Exit(1)
@@ -121,4 +134,13 @@ func main() {
 		setupLog.Error(err, "problem running manager")
 		os.Exit(1)
 	}
+}
+
+// GetWatchNamespace returns the namespace the operator should be watching for changes
+func getWatchNamespace() (string, error) {
+	ns, found := os.LookupEnv(WatchNamespaceEnvVar)
+	if !found {
+		return "", fmt.Errorf("%s must be set", WatchNamespaceEnvVar)
+	}
+	return ns, nil
 }
