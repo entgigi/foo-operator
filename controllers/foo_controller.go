@@ -43,7 +43,7 @@ type FooReconciler struct {
 //+kubebuilder:rbac:groups=foo.entgigi.entando.org,resources=foos/finalizers,verbs=update
 // RBAC permissions to monitor pods
 //+kubebuilder:rbac:groups="",resources=pods,verbs=get;list;watch
-//
+
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 func (r *FooReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
