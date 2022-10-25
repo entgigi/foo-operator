@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gigi
+spec:
+  containers:
+  - name: busybox
+    image: busybox:latest
+    # Just sleep forever
+    command: [ "sleep" ]
+    args: [ "infinity" ]

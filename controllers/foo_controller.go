@@ -113,7 +113,7 @@ func (r *FooReconciler) mapPodsReqToFooReq(obj client.Object) []reconcile.Reques
 		//
 		for _, item := range fooListCrd.Items {
 			if item.Spec.Name == obj.GetName() {
-				req = append(req, reconcile.Request{NamespacedName: types.NamespacedName{}})
+				req = append(req, reconcile.Request{NamespacedName: types.NamespacedName{Name: item.Name, Namespace: item.Namespace}})
 				log.Info("pod linked to a foo custom resource issued an event", "name", obj.GetName(), "namespace", obj.GetNamespace())
 			}
 

@@ -1,6 +1,6 @@
 apiVersion: foo.entgigi.entando.org/v1alpha1
 kind: Foo
 metadata:
-  name: foo-sample
+  name: foo-sample1
 spec:
-  # TODO(user): Add fields here
+  name: gigi

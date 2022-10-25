@@ -32,7 +32,7 @@ type FooSpec struct {
 // FooStatus defines the observed state of Foo
 type FooStatus struct {
 	// Happy will be set to true if Foo found a friend
-	Happy bool `json:"happy,omitempty"`
+	Happy bool `json:"happy"`
 }
 
 //+kubebuilder:object:root=true
