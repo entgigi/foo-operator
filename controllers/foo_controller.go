@@ -47,7 +47,7 @@ type FooReconciler struct {
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 func (r *FooReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	log := log.FromContext(ctx)
+	log := log.FromContext(ctx).WithName("FooController")
 	log.Info("reconciling Foo custom resource")
 
 	var fooCr foov1alpha1.Foo
@@ -100,7 +100,7 @@ func (r *FooReconciler) SetupWithManager(mgr ctrl.Manager) error {
 // recupera le CR Foo di eventuali pod creati modificati o cancellati
 func (r *FooReconciler) mapPodsReqToFooReq(obj client.Object) []reconcile.Request {
 	ctx := context.Background()
-	log := log.FromContext(ctx)
+	log := log.FromContext(ctx).WithName("FooController")
 
 	var req []reconcile.Request
 

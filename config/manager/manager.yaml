@@ -67,5 +67,11 @@ spec:
           requests:
             cpu: 10m
             memory: 64Mi
+        env:
+          - name: WATCH_NAMESPACES
+            valueFrom:
+              fieldRef:
+                #fieldPath: metadata.annotations['olm.targetNamespaces']
+                fieldPath: metadata.namespace           
       serviceAccountName: controller-manager
       terminationGracePeriodSeconds: 10
